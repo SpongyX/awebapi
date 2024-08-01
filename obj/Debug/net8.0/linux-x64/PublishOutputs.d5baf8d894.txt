@@ -1,0 +1,12 @@
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/awebapi
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/appsettings.Development.json
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/appsettings.json
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/awebapi.dll
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/awebapi.deps.json
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/awebapi.runtimeconfig.json
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/awebapi.pdb
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/Microsoft.AspNetCore.OpenApi.dll
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/Microsoft.OpenApi.dll
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/Swashbuckle.AspNetCore.Swagger.dll
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/Swashbuckle.AspNetCore.SwaggerGen.dll
+/home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/linux-x64/publish/Swashbuckle.AspNetCore.SwaggerUI.dll
