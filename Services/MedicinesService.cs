@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using awebapi.DTOs;
 using awebapi.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -15,20 +16,45 @@ namespace awebapi.Services
             _healthDbContext = healthDbContext;
         }
 
-
-
         public void CreateNewAsync(Medicines model)
         {
-            
-             _healthDbContext.Medicines.Add(model);
-             _healthDbContext.SaveChanges();
+
+            _healthDbContext.Medicines.Add(model);
+            _healthDbContext.SaveChanges();
+        }
+        public void UpdateMed(MedicineDto model)
+        {
+
+            try
+            {
+                var medToUpdate = _healthDbContext.Medicines.Where(x => x.Med_id == model.Med_id).FirstOrDefault();
+
+                if (medToUpdate != null)
+                {
+                    medToUpdate.Med_id = model.Med_id;
+                    medToUpdate.Name = model.Name;
+                    medToUpdate.Description = model.Description;
+                    medToUpdate.Stock = model.Stock;
+
+                    _healthDbContext.Medicines.Update(medToUpdate);
+                    _healthDbContext.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Product not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching all medicines", ex);
+            }
+
         }
 
         public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
-
         public async Task<List<Medicines>> FetchAllAsync()
         {
             try
@@ -148,11 +174,6 @@ namespace awebapi.Services
         {
             return _healthDbContext.Medicines.Where(item => item.Created_at >= startDate && item.Created_at <= endDate);
         }
-
-
-
-
-
 
         public Task<bool> SaveAsync()
         {

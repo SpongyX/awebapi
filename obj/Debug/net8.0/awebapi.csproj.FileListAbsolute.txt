@@ -237,3 +237,4 @@
 /home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/FuzzySearch.dll
 /home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/AutoMapper.dll
 /home/mo/Desktop/backup/dotnet/awebapi/bin/Debug/net8.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/home/mo/Desktop/backup/dotnet/awebapi/obj/Debug/net8.0/awebapi.sourcelink.json

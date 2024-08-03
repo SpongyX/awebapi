@@ -114,21 +114,30 @@ namespace awebapi.Controllers
 
         [HttpPost]
         [Route("AddNewMedicine")]
-        public IActionResult AddNewMedicine(MedicineDto medicineDto)
+        public IActionResult AddNewMedicine( [FromBody] MedicineDto medicineDto)
         {
             var AddNewMedicine = new Medicines {
-
+                Med_id = Guid.NewGuid(),  
                 Name = medicineDto.Name,
                 Description = medicineDto.Description,
                 // Created_at = DateTime.UtcNow,
                 // Last_edit = DateTime.UtcNow,
-                Stock = 100,
+                Stock = medicineDto.Stock,
                 Is_active = true
             };
 
             // var model = _mapper.Map<Medicines>(medicineDto);
             _medicineService.CreateNewAsync(AddNewMedicine);
             return Ok(AddNewMedicine);
+        }
+
+
+        [HttpPut]
+        [Route("UpdateMed")]
+        public IActionResult UpdateMed( [FromBody] MedicineDto medicineDto)
+        {
+            _medicineService.UpdateMed(medicineDto);
+            return Ok();
         }
     }
 }
