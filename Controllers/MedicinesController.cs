@@ -14,7 +14,7 @@ namespace awebapi.Controllers
         public MedicinesController(MedicinesService medicineService)
         {
             _medicineService = medicineService;
-            
+
 
         }
 
@@ -114,10 +114,11 @@ namespace awebapi.Controllers
 
         [HttpPost]
         [Route("AddNewMedicine")]
-        public IActionResult AddNewMedicine( [FromBody] MedicineDto medicineDto)
+        public IActionResult AddNewMedicine([FromBody] MedicineDto medicineDto)
         {
-            var AddNewMedicine = new Medicines {
-                Med_id = Guid.NewGuid(),  
+            var AddNewMedicine = new Medicines
+            {
+                Med_id = Guid.NewGuid(),
                 Name = medicineDto.Name,
                 Description = medicineDto.Description,
                 // Created_at = DateTime.UtcNow,
@@ -134,9 +135,18 @@ namespace awebapi.Controllers
 
         [HttpPut]
         [Route("UpdateMed")]
-        public IActionResult UpdateMed( [FromBody] MedicineDto medicineDto)
+        public IActionResult UpdateMed([FromBody] MedicineDto medicineDto)
         {
             _medicineService.UpdateMed(medicineDto);
+            return Ok();
+        }
+
+
+        [HttpDelete]
+        [Route("DeleteMed")]
+        public IActionResult DeleteMed(Guid med_id)
+        {
+            _medicineService.DeleteAsync(med_id);
             return Ok();
         }
     }

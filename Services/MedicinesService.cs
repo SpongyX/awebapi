@@ -51,9 +51,23 @@ namespace awebapi.Services
 
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public void DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var toDelete = _healthDbContext.Medicines.Where(x => x.Med_id == id).FirstOrDefault();
+
+                if (toDelete != null)
+                {
+                    _healthDbContext.Medicines.Remove(toDelete);
+                    _healthDbContext.SaveChangesAsync();
+                }
+              
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching all medicines", ex);
+            }
         }
         public async Task<List<Medicines>> FetchAllAsync()
         {
