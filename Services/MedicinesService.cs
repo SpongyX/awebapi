@@ -62,7 +62,7 @@ namespace awebapi.Services
                     _healthDbContext.Medicines.Remove(toDelete);
                     _healthDbContext.SaveChangesAsync();
                 }
-              
+
             }
             catch (Exception ex)
             {
@@ -188,6 +188,41 @@ namespace awebapi.Services
         {
             return _healthDbContext.Medicines.Where(item => item.Created_at >= startDate && item.Created_at <= endDate);
         }
+
+        public async Task<List<Medicines>> GetbyExpiryDate(DateOnly expirydate)
+        {
+            try
+            {
+                var res = await _healthDbContext.Medicines
+                                 .Where(x => x.Expiry_date < expirydate)
+                                 .ToListAsync();
+
+                return res ?? new List<Medicines>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching medicines by expiry date", ex);
+            }
+        }
+        public async Task<List<Medicines>> getByType(string type)
+        {
+            try
+            {
+
+                var medByType = await _healthDbContext.Medicines.Where(x => x.Type!.ToLower() == type.ToLower()).ToListAsync();
+                if (medByType != null)
+                {
+                    return medByType;
+                }
+                return new List<Medicines>();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("Error", ex);
+            }
+        }
+
 
         public Task<bool> SaveAsync()
         {

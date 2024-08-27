@@ -109,6 +109,57 @@ namespace awebapi.Controllers
 
             return Ok(items);
         }
+        [HttpGet]
+        [Route("GetbyExpiryDate")]
+        public async Task<IActionResult> GetbyExpiryDate(string expirydate)
+        {
+            try
+            {
+                // Parse the input string to DateTime
+                DateTime parsedDateTime = DateTime.ParseExact(expirydate.Replace("  ", " +"), "yyyy-MM-dd HH:mm:ss.fff zzz",
+                                                    System.Globalization.CultureInfo.InvariantCulture);
+
+                // Extract the date part and create a DateOnly object
+                DateOnly parsedExpiryDate = DateOnly.FromDateTime(parsedDateTime);
+
+                // Call the service method with the parsed date
+                var items = await _medicineService.GetbyExpiryDate(parsedExpiryDate);
+
+                return Ok(items);
+            }
+            catch (FormatException ex)
+            {
+                return BadRequest("Invalid date format");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "error while processing your request.");
+            }
+
+        }
+
+        [HttpGet]
+        [Route("GetbyType")]
+        public async Task<IActionResult> GetbyType(string type)
+        {
+            try
+            {
+                var items = await _medicineService.getByType(type);
+
+                return Ok(items);
+            }
+            catch (FormatException ex)
+            {
+                return BadRequest("Invalid type");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "error while processing your request.");
+            }
+
+        }
+
+
 
 
 

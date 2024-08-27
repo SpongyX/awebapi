@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace awebapi.Migrations
 {
     [DbContext(typeof(HealthDbContext))]
-    [Migration("20240728141214_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240826203826_InitialCreateDate")]
+    partial class InitialCreateDate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,25 @@ namespace awebapi.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("awebapi.Entities.Categories", b =>
+                {
+                    b.Property<Guid>("Category_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Is_active")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Category_id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("awebapi.Entities.Medicines", b =>
                 {
                     b.Property<Guid>("Med_id")
@@ -51,11 +70,32 @@ namespace awebapi.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("uuid_generate_v4()");
 
+                    b.Property<string>("Batch_Number")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("Category_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Cost_Price")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Currency")
+                        .HasColumnType("text");
+
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("Expiry_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Generic_Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Image")
                         .HasColumnType("text");
 
                     b.Property<bool>("Is_active")
@@ -64,8 +104,21 @@ namespace awebapi.Migrations
                     b.Property<DateTime>("Last_edit")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Selling_Price")
+                        .HasColumnType("text");
+
                     b.Property<int>("Stock")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
 
                     b.HasKey("Med_id");
 
