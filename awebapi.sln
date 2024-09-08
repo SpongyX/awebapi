@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "awebapi", "awebapi.csproj", "{73636D1A-D006-4D0D-91A1-F4D49AF51076}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "awebapiTests", "..\awebapiTests\awebapiTests.csproj", "{159591AD-1E7A-4D83-9D8A-FEB58154FA1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{73636D1A-D006-4D0D-91A1-F4D49AF51076}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73636D1A-D006-4D0D-91A1-F4D49AF51076}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73636D1A-D006-4D0D-91A1-F4D49AF51076}.Release|Any CPU.Build.0 = Release|Any CPU
+		{159591AD-1E7A-4D83-9D8A-FEB58154FA1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{159591AD-1E7A-4D83-9D8A-FEB58154FA1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{159591AD-1E7A-4D83-9D8A-FEB58154FA1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{159591AD-1E7A-4D83-9D8A-FEB58154FA1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

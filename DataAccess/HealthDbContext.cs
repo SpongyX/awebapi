@@ -9,7 +9,7 @@ public class HealthDbContext : DbContext
     }
 
     public DbSet<Users> Users { get; set; }
-     public DbSet<Medicines> Medicines { get; set; }
+     public virtual DbSet<Medicines> Medicines { get; set; }
      public DbSet<Categories> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

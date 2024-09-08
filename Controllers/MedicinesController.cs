@@ -11,11 +11,10 @@ namespace awebapi.Controllers
     public class MedicinesController : Controller
     {
         private readonly MedicinesService _medicineService;
-        public MedicinesController(MedicinesService medicineService)
+        public MedicinesController(
+            MedicinesService medicineService)
         {
             _medicineService = medicineService;
-
-
         }
 
         [HttpGet]
@@ -26,66 +25,33 @@ namespace awebapi.Controllers
             var response = await _medicineService.FetchAllAsync();
             return Ok(response);
         }
-
-        [HttpPost]
-        [Route("GetQuery")]
-
-        public async Task<IActionResult> GetQuery(string searchedQuery)
+        [HttpGet]
+        [Route("GetbyType")]
+        public async Task<IActionResult> GetbyType(string type)
         {
-            var response = await _medicineService.searchQuery(searchedQuery);
-            return Ok(response);
-        }
-
-
-
-        // [HttpPut("isActiveUpdate/{id}")]
-        // public async Task<IActionResult> UpdateStatus(Guid id, bool is_active)
-        // {
-        //     if (id == Guid.Empty)
-        //     {
-        //         return BadRequest("Invalid ID");
-        //     }
-
-        //     try
-        //     {
-        //         await _medicineService.isActiveUpdate(id, is_active);
-        //         return Ok(new { message = "Status updated" });
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return StatusCode(500, "Internal server error");
-        //     }
-        // }
-        [HttpPut("isActiveUpdate/{id}")]
-        public async Task<IActionResult> UpdateStatus(Guid id, [FromQuery] bool is_active)
-        {
-            if (id == Guid.Empty)
-            {
-                return BadRequest("Invalid ID");
-            }
-
             try
             {
-                await _medicineService.isActiveUpdate(id, is_active);
-                return Ok(new { message = "Status updated" });
+                var items = await _medicineService.GetByType(type);
+
+                return Ok(items);
+            }
+            catch (FormatException ex)
+            {
+                return BadRequest("Invalid type");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, "error while processing your request.");
             }
+
         }
-
-
-
         [HttpPost]
         [Route("GetByDate")]
-
-        public async Task<IActionResult> getByDate(DateTime Created_at)
+        public async Task<IActionResult> GetByDate(DateTime Created_at)
         {
-            var response = await _medicineService.getByDate(Created_at);
+            var response = await _medicineService.GetByDate(Created_at);
             return Ok(response);
         }
-
 
         [HttpGet]
         [Route("GetByDateRange")]
@@ -97,8 +63,6 @@ namespace awebapi.Controllers
             DateTime ParsedEndDate = DateTime.ParseExact(endDate.Replace("  ", " +"), "yyyy-MM-dd HH:mm:ss.fff zzzz",
            System.Globalization.CultureInfo.InvariantCulture).ToUniversalTime();
 
-            // DateTime utcStartDate = ParsedStartDate.ToUniversalTime();
-            // DateTime utcEndDate = ParsedEndDate.ToUniversalTime();
 
             if (ParsedStartDate > ParsedEndDate)
             {
@@ -109,6 +73,7 @@ namespace awebapi.Controllers
 
             return Ok(items);
         }
+
         [HttpGet]
         [Route("GetbyExpiryDate")]
         public async Task<IActionResult> GetbyExpiryDate(string expirydate)
@@ -137,68 +102,77 @@ namespace awebapi.Controllers
             }
 
         }
-
-        [HttpGet]
-        [Route("GetbyType")]
-        public async Task<IActionResult> GetbyType(string type)
-        {
-            try
-            {
-                var items = await _medicineService.getByType(type);
-
-                return Ok(items);
-            }
-            catch (FormatException ex)
-            {
-                return BadRequest("Invalid type");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "error while processing your request.");
-            }
-
-        }
-
-
-
-
-
+   
         [HttpPost]
         [Route("AddNewMedicine")]
         public IActionResult AddNewMedicine([FromBody] MedicineDto medicineDto)
         {
             var AddNewMedicine = new Medicines
             {
+                //Create_at & last_edit value are pre-defined in the model 
                 Med_id = Guid.NewGuid(),
                 Name = medicineDto.Name,
                 Description = medicineDto.Description,
-                // Created_at = DateTime.UtcNow,
-                // Last_edit = DateTime.UtcNow,
                 Stock = medicineDto.Stock,
                 Is_active = true
             };
 
-            // var model = _mapper.Map<Medicines>(medicineDto);
-            _medicineService.CreateNewAsync(AddNewMedicine);
+            _medicineService.CreateNew(AddNewMedicine);
             return Ok(AddNewMedicine);
         }
-
 
         [HttpPut]
         [Route("UpdateMed")]
         public IActionResult UpdateMed([FromBody] MedicineDto medicineDto)
         {
-            _medicineService.UpdateMed(medicineDto);
-            return Ok();
+            var medToUpdate = new Medicines
+            {
+                Med_id = medicineDto.Med_id,
+                Name = medicineDto.Name,
+                Description = medicineDto.Description,
+                Last_edit = DateTime.Now,
+                Stock = medicineDto.Stock
+            };
+            _medicineService.UpdateMed(medToUpdate);
+            return Ok(medToUpdate);
         }
 
-
+        //TODO update route
+        [HttpPut("isActiveUpdate/{id}")]
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromQuery] bool is_active)
+        {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid ID");
+            }
+            try
+            {
+                await _medicineService.UpdateActivation(id, is_active);
+                return Ok(new { message = "Status updated" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
         [HttpDelete]
         [Route("DeleteMed")]
-        public IActionResult DeleteMed(Guid med_id)
+        public async Task<IActionResult> DeleteMed(Guid med_id)
         {
-            _medicineService.DeleteAsync(med_id);
+            await _medicineService.DeleteAsync(med_id);
             return Ok();
         }
+
+        #region search engine to be corrected as noted in service
+
+        [HttpPost]
+        [Route("GetQuery")]
+
+        public async Task<IActionResult> GetQuery(string searchedQuery)
+        {
+            var response = await _medicineService.searchQuery(searchedQuery);
+            return Ok(response);
+        }
+        #endregion
     }
 }

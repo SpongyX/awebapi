@@ -12,8 +12,6 @@ namespace awebapi.Controllers
             _userService = userService;
         }
 
-
-
         
         [HttpGet]
         [Route("GetUsers")]

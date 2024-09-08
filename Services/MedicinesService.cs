@@ -1,42 +1,30 @@
-using System.Linq.Expressions;
-using awebapi.DTOs;
+﻿using awebapi.DTOs;
 using awebapi.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace awebapi.Services
 {
     public class MedicinesService
     {
-
         private readonly HealthDbContext _healthDbContext;
-
         public MedicinesService(HealthDbContext healthDbContext)
         {
             _healthDbContext = healthDbContext;
         }
-
-        public void CreateNewAsync(Medicines model)
+        public void CreateNew(Medicines model)
         {
-
             _healthDbContext.Medicines.Add(model);
             _healthDbContext.SaveChanges();
         }
-        public void UpdateMed(MedicineDto model)
+        public void UpdateMed(Medicines model)
         {
-
             try
             {
                 var medToUpdate = _healthDbContext.Medicines.Where(x => x.Med_id == model.Med_id).FirstOrDefault();
 
                 if (medToUpdate != null)
                 {
-                    medToUpdate.Med_id = model.Med_id;
-                    medToUpdate.Name = model.Name;
-                    medToUpdate.Description = model.Description;
-                    medToUpdate.Stock = model.Stock;
-
-                    _healthDbContext.Medicines.Update(medToUpdate);
+                    _healthDbContext.Medicines.Update(model);
                     _healthDbContext.SaveChanges();
                 }
                 else
@@ -50,17 +38,16 @@ namespace awebapi.Services
             }
 
         }
-
-        public void DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             try
             {
-                var toDelete = _healthDbContext.Medicines.Where(x => x.Med_id == id).FirstOrDefault();
+                var toDelete = await _healthDbContext.Medicines.Where(x => x.Med_id == id).FirstOrDefaultAsync();
 
                 if (toDelete != null)
                 {
                     _healthDbContext.Medicines.Remove(toDelete);
-                    _healthDbContext.SaveChangesAsync();
+                    await _healthDbContext.SaveChangesAsync();
                 }
 
             }
@@ -89,12 +76,28 @@ namespace awebapi.Services
                 throw new Exception("An error occurred while fetching all medicines", ex);
             }
         }
-
-        public async Task<Medicines?> FetchByIdAsync(int id)
+        public async Task<Medicines?> FetchByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                var medbyId = await _healthDbContext.Medicines.Where(x => x.Med_id == id).FirstOrDefaultAsync();
 
+                if (medbyId != null)
+                {
+                    return medbyId;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching all medicines", ex);
+            }
+        }
+        
+        //Not used in frontend (must be corrected to have better auto-complete and result)
         public async Task<List<Medicines>> searchQuery(string model)
         {
 
@@ -142,11 +145,7 @@ namespace awebapi.Services
                 throw new Exception("An error occurred while fetching all medicines", ex);
             }
         }
-
-
-
-
-        public async Task isActiveUpdate(Guid id, bool is_active)
+        public async Task UpdateActivation(Guid id, bool is_active)
         {
             try
             {
@@ -163,19 +162,12 @@ namespace awebapi.Services
                 throw new Exception("Error", ex);
             }
         }
-
-
-
-        public async Task<List<Medicines>> getByDate(DateTime Created_at)
+        public async Task<List<Medicines>> GetByDate(DateTime Created_at)
         {
             try
             {
                 var medByDate = await _healthDbContext.Medicines.Where(x => x.Created_at == Created_at).ToListAsync();
-                if (medByDate != null)
-                {
-                    return medByDate;
-                }
-                return new List<Medicines>();
+                return medByDate ?? new List<Medicines>();
             }
             catch (Exception ex)
             {
@@ -183,12 +175,10 @@ namespace awebapi.Services
                 throw new Exception("Error", ex);
             }
         }
-
         public IEnumerable<Medicines> GetByDateRange(DateTime startDate, DateTime endDate)
         {
             return _healthDbContext.Medicines.Where(item => item.Created_at >= startDate && item.Created_at <= endDate);
         }
-
         public async Task<List<Medicines>> GetbyExpiryDate(DateOnly expirydate)
         {
             try
@@ -204,17 +194,12 @@ namespace awebapi.Services
                 throw new Exception("Error fetching medicines by expiry date", ex);
             }
         }
-        public async Task<List<Medicines>> getByType(string type)
+        public async Task<List<Medicines>> GetByType(string type)
         {
             try
             {
-
                 var medByType = await _healthDbContext.Medicines.Where(x => x.Type!.ToLower() == type.ToLower()).ToListAsync();
-                if (medByType != null)
-                {
-                    return medByType;
-                }
-                return new List<Medicines>();
+                return medByType ?? new List<Medicines>();
             }
             catch (Exception ex)
             {
@@ -222,21 +207,6 @@ namespace awebapi.Services
                 throw new Exception("Error", ex);
             }
         }
-
-
-        public Task<bool> SaveAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Medicines> UpdateRecordAsync(Medicines model)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
 
     }
 }
